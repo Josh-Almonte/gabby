@@ -1,0 +1,119 @@
+:root {
+  --bg: #f4f5f0;
+  --ink: #1b1f23;
+  --panel: #ffffff;
+  --accent: #10454f;
+  --muted: #6c737a;
+  --border: #d2d7dc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 0% 0%, #dce7e2 0%, transparent 35%),
+    radial-gradient(circle at 100% 100%, #cfe0eb 0%, transparent 40%),
+    var(--bg);
+}
+
+.container {
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(16, 69, 79, 0.1);
+}
+
+h1,
+h2 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+form {
+  display: grid;
+  gap: 16px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="file"] {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.submit-btn {
+  margin-top: 8px;
+}
+
+.recording-panel {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8faf8;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #f7f8fb;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.flash {
+  border: 1px solid #ffbea8;
+  background: #fff3ef;
+  color: #7c2d12;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+@media (max-width: 720px) {
+  .container {
+    margin: 16px;
+    padding: 16px;
+  }
+}

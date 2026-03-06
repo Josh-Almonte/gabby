@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }} - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>{{ title }}</h1>
+      <p><strong>Run ID:</strong> {{ run_id }}</p>
+      <p><strong>Notebook:</strong> <code>{{ notebook_name }}</code></p>
+      <p>
+        <a href="{{ url_for('download', run_id=run_id, asset='transcript') }}">Download transcript</a> |
+        <a href="{{ url_for('download', run_id=run_id, asset='summary') }}">Download summary</a> |
+        <a href="{{ url_for('download', run_id=run_id, asset='downstream') }}">Download downstream JSON</a> |
+        <a href="{{ url_for('download', run_id=run_id, asset='summary_audio') }}">Download summary audio</a> |
+        <a href="{{ url_for('download', run_id=run_id, asset='downstream_audio') }}">Download downstream audio</a>
+      </p>
+
+      <section>
+        <h2>Transcript</h2>
+        <pre>{{ transcript_text }}</pre>
+      </section>
+
+      <section>
+        <h2>Summary</h2>
+        <pre>{{ summary_text }}</pre>
+      </section>
+
+      <section>
+        <h2>Downstream JSON</h2>
+        <pre>{{ downstream_json }}</pre>
+      </section>
+
+      <p><a href="{{ url_for('index') }}">Process another meeting</a></p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Meeting NotebookLM App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Meeting Transcribe + Summarize</h1>
+      <p>Transcribe locally with Whisper, then summarize/process with NotebookLM APIs.</p>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('process_meeting') }}" method="post" enctype="multipart/form-data">
+        <label>
+          Meeting title
+          <input type="text" name="title" placeholder="Q1 roadmap sync" required />
+        </label>
+
+        <label>
+          Whisper model
+          <input type="text" name="whisper_model" value="{{ default_model }}" />
+        </label>
+
+        <label>
+          Transcript language (optional)
+          <input type="text" name="transcript_language" placeholder="en" />
+        </label>
+
+        <label>
+          Meeting audio
+          <input id="audio-file-input" type="file" name="audio_file" accept="audio/*" required />
+        </label>
+
+        <section class="recording-panel">
+          <h2>Record on Mac microphone</h2>
+          <p>Use this if you want to capture a meeting directly in browser.</p>
+          <div class="row">
+            <button id="record-btn" type="button">Start Recording</button>
+            <button id="stop-btn" type="button" disabled>Stop</button>
+          </div>
+          <audio id="recording-preview" controls></audio>
+        </section>
+
+        <button class="submit-btn" type="submit">Run Pipeline</button>
+      </form>
+    </main>
+
+    <script>
+      const recordBtn = document.getElementById("record-btn");
+      const stopBtn = document.getElementById("stop-btn");
+      const preview = document.getElementById("recording-preview");
+      const fileInput = document.getElementById("audio-file-input");
+
+      let mediaRecorder = null;
+      let chunks = [];
+
+      recordBtn.addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        chunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) chunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: "audio/webm" });
+          preview.src = URL.createObjectURL(blob);
+
+          const file = new File([blob], "meeting-recording.webm", { type: "audio/webm" });
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          fileInput.files = dt.files;
+        };
+
+        mediaRecorder.start();
+        recordBtn.disabled = true;
+        stopBtn.disabled = false;
+      });
+
+      stopBtn.addEventListener("click", () => {
+        if (!mediaRecorder) return;
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+        recordBtn.disabled = false;
+        stopBtn.disabled = true;
+      });
+    </script>
+  </body>
+</html>
